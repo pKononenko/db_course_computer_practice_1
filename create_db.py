@@ -210,6 +210,7 @@ def db_insert_data_to_db(conn, filenames, dbname, username, password, host, port
                 conn.commit()
 
     # Insert files
+    start_time = time()
     idx = 0
     for filename in filenames:
         exam_year = re.findall(r'\d+', filename)[0]
@@ -262,6 +263,9 @@ def db_insert_data_to_db(conn, filenames, dbname, username, password, host, port
                     except (psycopg2.ProgrammingError, psycopg2.DataError) as e:
                         conn.rollback()
                         return conn, False
+    end_time = time()
+    logging.info(f"INSERTION TIME: {end_time - start_time} s")
+    print(f"INSERTION TIME: {end_time - start_time} s")
     
     # Drop temp helper table
     drop_table_by_name(conn, "ZNODATA_ROWTABLE")
