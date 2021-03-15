@@ -4,10 +4,11 @@
 ## Директорія до запуску ##
 ```bash
 .
-|—— results
-|   |—— d
-|   |—— d
-└—— create_db.py
+├── results
+│   ├── query_result.csv
+│   └── query_result_compare.png
+├── README.md
+└── create_db.py
 ```
 
 ## Інструкція до запуску ##
@@ -15,3 +16,15 @@
 1. Запустити через консоль файл ```create_db.py``` за допомогою команди: ```python create_db.py <dbname> <username> <password> <host> <port>```
 
 ## Директорія після запуску ##
+```bash
+.
+├── data
+│   ├── Odata2019File.csv
+│   └── Odata2020File.csv
+├── results
+│   ├── query_result.csv
+│   └── query_result_compare.png
+├── README.md
+├── create_db.log
+└── create_db.py
+```
