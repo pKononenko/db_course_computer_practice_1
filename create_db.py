@@ -252,6 +252,10 @@ def db_insert_data_to_db(conn, filenames, dbname, username, password, host, port
                                     conn.commit()
                                 connect_bool = False
                     
+                    except (psycopg2.ProgrammingError, psycopg2.DataError) as e:
+                        conn.rollback()
+                        return conn, False
+                    
                     except (psycopg2.OperationalError, psycopg2.DatabaseError, psycopg2.InterfaceError) as e:
                         sleep(1)
                         conn = db_connection(dbname, username, password, host, port)
@@ -260,9 +264,6 @@ def db_insert_data_to_db(conn, filenames, dbname, username, password, host, port
                         logging.debug("Reconnected succesfully.")
                         connect_bool = True
 
-                    except (psycopg2.ProgrammingError, psycopg2.DataError) as e:
-                        conn.rollback()
-                        return conn, False
     end_time = time()
     logging.info(f"INSERTION TIME: {end_time - start_time} s")
     print(f"INSERTION TIME: {end_time - start_time} s")
@@ -332,6 +333,8 @@ def main():
     # Insert data
     conn, bool_inserted = db_insert_data_to_db(conn, filenames, dbname, username, password, host, port)
     if not bool_inserted:
+        if conn is not None:
+            conn.close()
         logging.error("Data insertion error. Exit Program.")
         print("Data insertion error. Exit Program.")
         return
@@ -340,7 +343,7 @@ def main():
     db_sql_execute_save(conn)
 
     # Drop main table (uncomment if you need this)
-    # drop_table_by_name(conn, "ZNODATA")
+    drop_table_by_name(conn, "ZNODATA")
 
     if conn is not None:
         conn.close()
